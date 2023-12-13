@@ -1,0 +1,184 @@
+#include <iostream>
+#include <fstream>
+#include <unordered_map>
+#include <string>
+#include <string.h>
+#include <map>
+
+using namespace std;
+
+unordered_map<string, string> acc2arch;
+unordered_map<string, string> fam2clan;
+unordered_map<string, int> clust, clust_clan, counts;
+multimap<string, string> arch2query;
+double sens_a = 0, prec_a=0, sensw_a = 0, precw_a = 0, weights_sum = 0;
+
+bool query_level = false;
+
+string clan_arch(const string& arch) {
+	size_t i = 0;
+	string r;
+	for(;;) {
+		size_t j = arch.find('_', i);
+		if(j == string::npos) {
+			const string fam = arch.substr(i);
+			if(!r.empty())
+				r += '_';
+			const auto it = fam2clan.find(fam);
+			r += it == fam2clan.end() ? fam : it->second;
+			return r;
+		}
+		const string fam = arch.substr(i, j - i);
+		if(!r.empty())
+			r += '_';
+		const auto it = fam2clan.find(fam);
+		r += it == fam2clan.end() ? fam : it->second;
+		i = j + 1;
+		if(i >= arch.length())
+			break;
+	}
+	return r;
+}
+
+void filter_aln(const char* name) {
+	string query, target;
+	double evalue, pident, qcov, scov;
+	int qlen, slen;
+	ifstream in(name);
+	ofstream fp_out("fp.tsv");
+	ofstream tp_out("tp.tsv");
+	while(in >> query >> target >> evalue >> pident >> qcov >> scov >> qlen >> slen) {
+		const auto& query_arch = acc2arch.at(query), target_arch = acc2arch.at(target);
+		if(query_arch == target_arch)
+			tp_out << query <<'\t'<< target <<'\t'<< evalue <<'\t'<< pident <<'\t'<< qcov <<'\t'<< scov <<'\t'<< qlen <<'\t'<< slen << endl;
+		else if(clan_arch(query_arch) != clan_arch(target_arch))
+			fp_out << query <<'\t'<< target <<'\t'<< evalue <<'\t'<< pident <<'\t'<< qcov <<'\t'<< scov <<'\t'<< qlen <<'\t'<< slen << endl;
+	}
+}
+
+void aln_file(const char* name) {
+	string query, target, query_arch, curr, query_arch_clan;
+	ifstream in(name);
+	int tp=0, fp=0,n=0;
+	while(in >> query >> target) {
+		if(query != curr) {
+			++n;
+			cerr << n << endl;
+			if(tp+fp > 0) cout << curr << '\t' << (double)tp / counts[query_arch] << '\t' << (double)tp / (tp+fp) << endl;
+			query_arch = acc2arch.at(query);
+			query_arch_clan = clan_arch(query_arch);
+			curr = query;
+			tp = 0;
+			fp = 0;
+		}
+		auto it = acc2arch.find(target);
+		if(it != acc2arch.end()) {
+			const auto& target_arch = it->second;
+			if(target_arch == query_arch)
+				++tp;
+			else if(clan_arch(target_arch) != query_arch_clan)
+				++fp;
+		}
+	}
+}
+
+void eval_cluster(const string& rep) {
+	int size=0;
+	for(const auto& arch : clust)
+		size += arch.second;
+	for(const auto& arch: clust) {
+		const double arch_size = counts[arch.first];
+		const double sens = (double)arch.second / arch_size;
+		const double sensw = sens / arch_size;
+		//prec = (double)arch.second / size;
+		if(query_level) {
+			auto its = arch2query.equal_range(arch.first);
+			for(auto it = its.first; it != its.second; ++it)
+				cout << it->second << '\t' << sens << endl;
+		} else
+			cout << "SENS" << '\t' << arch.first << '\t' << arch.second << '\t' << sens << '\t' << rep << endl;
+		sens_a += arch.second * sens;
+		weights_sum += arch.second / arch_size;
+		sensw_a += arch.second * sensw;
+		//prec_a += arch.second * prec;
+	}
+	for(const auto& arch : clust_clan) {
+		const double arch_size = counts[arch.first];
+		const double prec = (double)arch.second / size;
+		const double precw = prec / arch_size;
+		if(query_level) {
+		} else
+			cout << "PREC" << '\t' << arch.first << '\t' << arch.second << '\t' << prec << '\t' << rep << endl;
+		prec_a += arch.second * prec;
+		precw_a += arch.second * precw;
+	}
+}
+
+int main(int argc, char** argv) {
+	const string data_dir = argv[1];
+	ifstream map_file(data_dir + "/arch80_all.tsv");
+	string acc, arch;
+	acc2arch.reserve(149824975);
+	int n=0;
+	while(map_file >> acc >> arch) {
+		acc2arch[acc] = arch;
+		++counts[arch];
+		++n;
+		if(n % 1000000 == 0)
+			cerr << n << endl;
+	}
+	cerr << "Accessions = " << acc2arch.size() << endl;
+	cerr << "Archs = " << counts.size() << endl;
+
+	ifstream clan_file(data_dir + "/clan2acc.tsv");
+	string clan, fam;
+	while(clan_file >> clan >> fam) {
+		fam2clan[fam] = clan;
+	}
+
+	if(argc == 4 && strcmp(argv[3], "aln") == 0) {
+		aln_file(argv[2]);
+		return 0;
+	}
+
+	if(argc == 4 && strcmp(argv[3], "filter") == 0) {
+		filter_aln(argv[2]);
+		return 0;
+	}
+
+	ifstream in_file(argv[2]);
+	string rep, member, curr;
+	n=0;
+	int ignored=0,total=0;
+	while(in_file >> rep >> member) {
+		if(rep != curr) {
+			eval_cluster(curr);
+			curr = rep;
+			clust.clear();
+			clust_clan.clear();
+			arch2query.clear();
+		}
+		const auto it = acc2arch.find(member);
+		if(it == acc2arch.end()) {
+			++ignored;
+		} else {
+			const string& arch = it->second;
+			++clust[arch];
+			++clust_clan[clan_arch(arch)];
+			++n;
+			if(query_level) arch2query.emplace(arch, member);
+		}
+		++total;
+		if(total % 100000 == 0)
+			cerr << total << endl;
+	}
+	eval_cluster(curr);
+	cerr << "Total = " << total << endl;
+	cerr << "Annotated = " << n << endl;
+	cerr << "Sens = " << sens_a / n << endl;
+	cerr << "Prec = " << prec_a / n << endl;
+	cerr << "SensW = " << sensw_a / weights_sum << endl;
+        cerr << "PrecW = " << precw_a / weights_sum << endl;
+
+	return 0;
+}
