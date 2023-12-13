@@ -11,7 +11,7 @@ unordered_map<string, string> acc2arch;
 unordered_map<string, string> fam2clan;
 unordered_map<string, int> clust, clust_clan, counts;
 multimap<string, string> arch2query;
-double sens_a = 0, prec_a=0, sensw_a = 0, precw_a = 0, weights_sum = 0;
+double sens_a = 0, prec_a = 0;
 
 bool query_level = false;
 
@@ -38,22 +38,6 @@ string clan_arch(const string& arch) {
 			break;
 	}
 	return r;
-}
-
-void filter_aln(const char* name) {
-	string query, target;
-	double evalue, pident, qcov, scov;
-	int qlen, slen;
-	ifstream in(name);
-	ofstream fp_out("fp.tsv");
-	ofstream tp_out("tp.tsv");
-	while(in >> query >> target >> evalue >> pident >> qcov >> scov >> qlen >> slen) {
-		const auto& query_arch = acc2arch.at(query), target_arch = acc2arch.at(target);
-		if(query_arch == target_arch)
-			tp_out << query <<'\t'<< target <<'\t'<< evalue <<'\t'<< pident <<'\t'<< qcov <<'\t'<< scov <<'\t'<< qlen <<'\t'<< slen << endl;
-		else if(clan_arch(query_arch) != clan_arch(target_arch))
-			fp_out << query <<'\t'<< target <<'\t'<< evalue <<'\t'<< pident <<'\t'<< qcov <<'\t'<< scov <<'\t'<< qlen <<'\t'<< slen << endl;
-	}
 }
 
 void aln_file(const char* name) {
@@ -89,7 +73,6 @@ void eval_cluster(const string& rep) {
 	for(const auto& arch: clust) {
 		const double arch_size = counts[arch.first];
 		const double sens = (double)arch.second / arch_size;
-		const double sensw = sens / arch_size;
 		//prec = (double)arch.second / size;
 		if(query_level) {
 			auto its = arch2query.equal_range(arch.first);
@@ -98,24 +81,24 @@ void eval_cluster(const string& rep) {
 		} else
 			cout << "SENS" << '\t' << arch.first << '\t' << arch.second << '\t' << sens << '\t' << rep << endl;
 		sens_a += arch.second * sens;
-		weights_sum += arch.second / arch_size;
-		sensw_a += arch.second * sensw;
 		//prec_a += arch.second * prec;
 	}
 	for(const auto& arch : clust_clan) {
 		const double arch_size = counts[arch.first];
 		const double prec = (double)arch.second / size;
-		const double precw = prec / arch_size;
 		if(query_level) {
 		} else
 			cout << "PREC" << '\t' << arch.first << '\t' << arch.second << '\t' << prec << '\t' << rep << endl;
 		prec_a += arch.second * prec;
-		precw_a += arch.second * precw;
 	}
 }
 
 int main(int argc, char** argv) {
-	const string data_dir = argv[1];
+	if (argc <= 1 || (argv[1] != string("clust") && argv[1] != string("aln"))) {
+		cerr << "Command missing/invalid, options: clust, aln" << endl;
+		return 1;
+	}
+	const string data_dir = argv[2];
 	ifstream map_file(data_dir + "/arch80_all.tsv");
 	string acc, arch;
 	acc2arch.reserve(149824975);
@@ -136,17 +119,12 @@ int main(int argc, char** argv) {
 		fam2clan[fam] = clan;
 	}
 
-	if(argc == 4 && strcmp(argv[3], "aln") == 0) {
-		aln_file(argv[2]);
+	if (strcmp(argv[1], "aln") == 0) {
+		aln_file(argv[3]);
 		return 0;
 	}
 
-	if(argc == 4 && strcmp(argv[3], "filter") == 0) {
-		filter_aln(argv[2]);
-		return 0;
-	}
-
-	ifstream in_file(argv[2]);
+	ifstream in_file(argv[3]);
 	string rep, member, curr;
 	n=0;
 	int ignored=0,total=0;
@@ -177,8 +155,6 @@ int main(int argc, char** argv) {
 	cerr << "Annotated = " << n << endl;
 	cerr << "Sens = " << sens_a / n << endl;
 	cerr << "Prec = " << prec_a / n << endl;
-	cerr << "SensW = " << sensw_a / weights_sum << endl;
-        cerr << "PrecW = " << precw_a / weights_sum << endl;
 
 	return 0;
 }
