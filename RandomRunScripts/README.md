@@ -1,4 +1,4 @@
-#Scripts to re-create DeepClust AlphaFold2 Analysis with random centroids:
+# Scripts to re-create DeepClust AlphaFold2 Analysis with random centroids:
 
 DCD-Database:
 - directory called joined_sort_clust_split
