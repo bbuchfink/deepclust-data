@@ -6,8 +6,8 @@ Software needed:
 
 - MMseqs2
 - DIAMOND
-- FLSHclust: The code can be downloaded at https://zenodo.org/records/8371343
-  The `CODE.zip` archive is assumed to be extracted in $HOME. All dependencies
+- FLSHclust: The code can be downloaded at https://zenodo.org/records/8371343.
+  The `CODE.zip` archive is assumed to be extracted in `$HOME`. All dependencies
   are expected to be installed (see FLSHclust readme).
 - clusteval
 - seqtk
