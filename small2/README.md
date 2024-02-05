@@ -11,6 +11,7 @@ Software needed:
   are expected to be installed (see FLSHclust readme). In `CODE/FLSH/flsh.py`, we
   set the default sequence identity cutoff from `0.3` to `0.2` (line 88), as
   changing this parameter on the command line did not work correctly for us.
+- LAST release 1540: https://gitlab.com/mcfrith/last
 - clusteval
 - seqtk
 - zstd
