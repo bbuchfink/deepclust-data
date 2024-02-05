@@ -1,11 +1,5 @@
 #!/bin/bash
 
-./diamond.sh nr.dmnd
-./diamond-lin.sh nr.dmnd
-./mmseqs.sh nr
-./mmseqs-linclust.sh nr
-/usr/bin/time ./flshclust.sh nr.faa
-
 ./diamond.sh 270M.dmnd
 ./diamond-lin.sh 270M.dmnd
 ./mmseqs.sh 270M
@@ -42,3 +36,8 @@
 ./mmseqs-linclust.sh 10M
 /usr/bin/time ./flshclust.sh 10M.faa
 
+./diamond.sh nr.dmnd
+./diamond-lin.sh nr.dmnd
+./mmseqs.sh nr
+./mmseqs-linclust.sh nr
+/usr/bin/time ./flshclust.sh nr.faa
