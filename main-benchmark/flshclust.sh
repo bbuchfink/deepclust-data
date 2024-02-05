@@ -4,7 +4,7 @@ export PYSPARK_PYTHON=$(which python3)
 export PYSPARK_DRIVER_PYTHON=$(which ipython3)
 
 dir=$(pwd)
-db=$dir/nr.faa
+db=$dir/$1
 
 cd $CODE_DIR/CODE/FLSH
 python3 ./flsh.py \
@@ -15,7 +15,7 @@ python3 ./flsh.py \
 
 cat $dir/out.tsv/*.csv > $dir/clust1
 seqtk subseq $db <(cut -f1 $dir/clust1 | uniq) > $dir/centroids1.faa
-../util/convertx.py centroids1.faa centroids1x.faa
+$dir/../util/convertx.py centroids1.faa centroids1x.faa
 #rm -rf $dir/tmp1
 #rm -rf $dir/tmp2
 #rm -rf $dir/tmp3
@@ -39,5 +39,6 @@ python3 ./flsh.py \
         $dir/centroids2.faa fasta $dir/out3.tsv $dir/tmp7 $dir/tmp8 $dir/tmp9
 
 cat $dir/out3.tsv/*.csv > $dir/clust3
-../util/merge.sh $dir/clust2 $dir/clust3 > $dir/clust2_3
-../util/merge.sh $dir/clust1 $dir/clust2_3 > $dir/clust1_2_3
+$dir/../util/merge.sh $dir/clust2 $dir/clust3 > $dir/clust2_3
+$dir/../util/merge.sh $dir/clust1 $dir/clust2_3 > $dir/clust1_2_3
+$dir/../util/get-eval.sh $dir/clust1_2_3 flshclust
