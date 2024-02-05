@@ -20,6 +20,8 @@ Setup: `./setup.sh`
 Run: `./run.sh`
 
 To plot Fig. 1a: Insert runtimes (in hours) into `Fig1a_data.tsv`, run `Fig1a.R`.
+
 To plot Fig. 1b: Insert runtimes (in hours) into `Fig1b_data.tsv`, run `Fig1b.R`.
+
 To plot Fig. 1c: Run `Fig1c.R` with parameter `prec` to plot precision or `sens`
 to plot sensitivity.
