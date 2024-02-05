@@ -13,6 +13,7 @@ Software needed:
   changing this parameter on the command line did not work correctly for us.
 - clusteval
 - seqtk
+- zstd
 
 Setup: `./setup.sh`
 
