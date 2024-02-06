@@ -10,3 +10,5 @@ Data files can be downloaded at ... and should be placed in the root of the repo
 - `arch80_10M.tsv`: File mapping NCBI accessions to Pfam domain architectures (for small database benchmark of 10M sequences).
 - `clan2acc.tsv`: File mapping Pfam accessions to clans.
 - `accessions_10M.tsv.zst`: List of accessions in 10M sequences file used for the small database benchmark. 
+- `reps_10k.ge2.faa`: Sequences of 10k randomly samples representatives of the big ~19bn clustering run of clusters of size >= 2.
+- `reps_10k.ge3.faa`: Sequences of 10k randomly samples representatives of the big ~19bn clustering run of clusters of size >= 3.
