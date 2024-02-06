@@ -7,3 +7,4 @@ Data files can be downloaded at ... and should be placed in the root of the repo
 - `arch80_all.tsv`: File mapping NCBI accessions to Pfam domain architectures.
 - `nr_accessions.tsv.zst`: List of all accessions in NR database that was used for the main benchmark.
 - `reps_1M_ge5.tsv.zst`: List of accessions of randomly samples representatives of the big ~19bn clustering run of clusters of size >= 5.
+- `arch80_10M.tsv`: File mapping NCBI accessions to Pfam domain architectures (for small database benchmark of 10M sequences).
