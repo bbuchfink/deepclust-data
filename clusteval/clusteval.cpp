@@ -15,6 +15,15 @@ double sens_a = 0, prec_a = 0;
 
 bool query_level = false;
 
+string path(const string& file) {
+	size_t pos = file.find_last_of("/\\");
+
+	if (pos != std::string::npos)
+		return file.substr(0, pos);
+	else
+		return ".";
+}
+
 string clan_arch(const string& arch) {
 	size_t i = 0;
 	string r;
@@ -98,8 +107,8 @@ int main(int argc, char** argv) {
 		cerr << "Command missing/invalid, options: clust, aln" << endl;
 		return 1;
 	}
-	const string data_dir = argv[2];
-	ifstream map_file(data_dir + "/arch80_all.tsv");
+	const string data_file = argv[2];
+	ifstream map_file(data_file);
 	string acc, arch;
 	acc2arch.reserve(149824975);
 	int n=0;
@@ -113,11 +122,13 @@ int main(int argc, char** argv) {
 	cerr << "Accessions = " << acc2arch.size() << endl;
 	cerr << "Archs = " << counts.size() << endl;
 
-	ifstream clan_file(data_dir + "/clan2acc.tsv");
+	ifstream clan_file(path(data_file) + "/clan2acc.tsv");
 	string clan, fam;
 	while(clan_file >> clan >> fam) {
 		fam2clan[fam] = clan;
 	}
+	
+	cerr << "Families mapped to clan = " << fam2clan.size() << endl;
 
 	if (strcmp(argv[1], "aln") == 0) {
 		aln_file(argv[3]);
