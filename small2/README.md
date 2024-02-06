@@ -18,4 +18,8 @@ Software needed:
 - seqtk
 - zstd
 
+Setup: `./setup.sh`
+
 To run the benchmark for a tool, run the respective script and insert the resulting run time and sensitivity into the `Suppl1_data.tsv` file.
+
+To visualize run `suppl1.R`.

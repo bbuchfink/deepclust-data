@@ -41,3 +41,4 @@ python3 ./flsh.py \
 cat $dir/out3.tsv/*.csv > $dir/clust3
 ../util/merge.sh $dir/clust2 $dir/clust3 > $dir/clust2_3
 ../util/merge.sh $dir/clust1 $dir/clust2_3 > $dir/clust1_2_3
+../util/get-eval-small.sh $dir/clust1_2_3 flshclust

@@ -9,3 +9,4 @@ export OMP_NUM_THREADS=8
 mpirun -np 4 hipmcl -M last_aln.tsv -I 2 -per-process-mem 32 -o hipmcl.out
 
 cat hipmcl.out | ./convert-mcl.py > hipmcl.tsv
+../util/get-eval-small.sh hipmcl.tsv hipMCL
