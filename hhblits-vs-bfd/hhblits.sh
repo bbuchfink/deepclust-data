@@ -17,4 +17,4 @@ done
 
 cat *.tsv > all.tsv
 ../util/hhblits-get-cov.sh all.tsv $db.fai > covs
-cut -f2 covs | sort -k1,1 -n -r | ../util/cum-dist.py > $out
+cut -f2 covs | sort -k1,1 -n -r | ../util/cum-dist.py 10000 > $out
