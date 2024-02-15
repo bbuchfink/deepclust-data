@@ -1,4 +1,4 @@
-Number of sequences (millions)	MMseqs2	MMseqs2 (uni-directional coverage)	DIAMOND DeepClust	FLSHclust
+Number of sequences (millions)	MMseqs2	DIAMOND DeepClust(uni-directional coverage)	DIAMOND DeepClust	FLSHclust
 10000000
 27000000
 55000000

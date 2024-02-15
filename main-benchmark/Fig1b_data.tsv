@@ -1,4 +1,4 @@
-Number of sequences (millions)	DIAMOND DeepClust	DIAMOND DeepClust (linear mode)	MMseqs2/Linclust
+Number of sequences (millions)	DIAMOND DeepClust	DIAMOND DeepClust (linear mode)	MMseqs2/Linclust	DIAMOND DeepClust (uni-directional coverage)
 10000000
 27000000
 55000000

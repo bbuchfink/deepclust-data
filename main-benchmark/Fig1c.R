@@ -8,7 +8,7 @@ Fig1b_data <-
     `DIAMOND DeepClust` = as.double(readr::read_lines(paste("diamond", type, "gz", sep='.'))),
     `FLSHclust` = as.double(readr::read_lines(paste("flshclust",type,"gz", sep='.'))),
     `MMseqs2` = as.double(readr::read_lines(paste("mmseqs",type,"gz",sep='.'))),
-    `MMseqs2 (uni-directional coverage)` = as.double(readr::read_lines(paste("17.10M",type,"gz", sep='.'))),
+    `DIAMOND DeepClust (uni-directional coverage)` = as.double(readr::read_lines(paste("diamond-uni",type,"gz", sep='.'))),
 	`MMseqs2/Linclust` = as.double(readr::read_lines(paste("mmseqs-linclust",type,"gz",sep='.'))),
 	`DIAMOND DeepClust (linear mode)` = as.double(readr::read_lines(paste("diamond-linear",type,"gz", sep='.')))
   )
@@ -24,7 +24,7 @@ Fig1b_data_tibble <-
     `DIAMOND DeepClust` = Fig1b_data[[1]],
     `FLSHclust` = Fig1b_data[[2]],
     `MMseqs2` = Fig1b_data[[3]],
-    `MMseqs2 (uni-directional coverage)` = Fig1b_data[[4]],
+    `DIAMOND DeepClust (uni-directional coverage)` = Fig1b_data[[4]],
 	`MMseqs2/Linclust` = Fig1b_data[[5]],
 	`DIAMOND DeepClust (linear mode)` = Fig1b_data[[6]]
   )
@@ -39,7 +39,7 @@ Fig1b_data_tibble_tidy <- dplyr::mutate(Fig1b_data_tibble_tidy, Software = facto
   "MMseqs2",
   "FLSHclust",
   "MMseqs2/Linclust",
-  "MMseqs2 (uni-directional coverage)"
+  "DIAMOND DeepClust (uni-directional coverage)"
 )))
 
 # remotes::install_github('jorvlan/raincloudplots')

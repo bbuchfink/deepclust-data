@@ -41,3 +41,4 @@
 ./mmseqs.sh nr
 ./mmseqs-linclust.sh nr
 /usr/bin/time ./flshclust.sh nr.faa
+./diamond-uni.sh nr.dmnd

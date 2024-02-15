@@ -1,6 +1,6 @@
 Fig1a_data <- readr::read_tsv("Fig1b_data.tsv", col_names = TRUE)
 Fig1a_data_tidy <-
-  tidyr::pivot_longer(Fig1a_data, `MMseqs2/Linclust`:`DIAMOND DeepClust`)
+  tidyr::pivot_longer(Fig1a_data, `DIAMOND DeepClust (uni-directional coverage)`:`DIAMOND DeepClust`)
 #Fig1a_data_tidy <- Fig1a_data
 names(Fig1a_data_tidy)[2:3] <-
   c("Software", "Clustering Runtime (hours)")
