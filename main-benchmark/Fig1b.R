@@ -1,9 +1,10 @@
 Fig1a_data <- readr::read_tsv("Fig1b_data.tsv", col_names = TRUE)
 Fig1a_data_tidy <-
-  tidyr::pivot_longer(Fig1a_data, `DIAMOND DeepClust (uni-directional coverage)`:`DIAMOND DeepClust`)
+  tidyr::pivot_longer(Fig1a_data, `DIAMOND DeepClust (uni-dir. coverage)`:`DIAMOND DeepClust`)
 #Fig1a_data_tidy <- Fig1a_data
 names(Fig1a_data_tidy)[2:3] <-
   c("Software", "Clustering Runtime (hours)")
+Fig1a_data_tidy$Software <- factor(Fig1a_data_tidy$Software, levels = c("DIAMOND DeepClust (uni-dir. coverage)", "DIAMOND DeepClust", "DIAMOND DeepClust (linear mode)", "MMseqs2/Linclust"))
 
 ####### Runtime in Days
 
@@ -48,8 +49,9 @@ Fig1a_days <-
   ))  +  ggplot2::ylim(1, 33) +
   ggplot2::scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) +
   ggplot2::scale_y_continuous(breaks = scales::pretty_breaks(n = 20)) +
-  ggplot2::scale_color_manual(values = ggsci::pal_npg("nrc")(6)[c(3, 5, 6)]) +
-  ggplot2::guides(colour=ggplot2::guide_legend(ncol=2,nrow=2,byrow=TRUE))
+  ggplot2::scale_color_manual(values = ggsci::pal_npg("nrc")(6)[c(2, 3, 5, 6)]) +
+  ggplot2::guides(colour=ggplot2::guide_legend(ncol=2,nrow=2,byrow=TRUE)) +
+  ggplot2::theme(legend.title=ggplot2::element_blank())
 
 
 
