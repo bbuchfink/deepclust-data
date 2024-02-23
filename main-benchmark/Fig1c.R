@@ -10,7 +10,7 @@ Fig1b_data <-
     `MMseqs2` = as.double(readr::read_lines(paste("mmseqs",type,"gz",sep='.'))),
     `DIAMOND DeepClust (uni-directional coverage)` = as.double(readr::read_lines(paste("diamond-uni",type,"gz", sep='.'))),
 	`MMseqs2/Linclust` = as.double(readr::read_lines(paste("mmseqs-linclust",type,"gz",sep='.'))),
-	`DIAMOND DeepClust (linear mode)` = as.double(readr::read_lines(paste("diamond-linear",type,"gz", sep='.')))
+	`DIAMOND DeepClust (linear mode)` = as.double(readr::read_lines(paste("diamond-lin",type,"gz", sep='.')))
   )
 
 # look at differences in distribution sizes
