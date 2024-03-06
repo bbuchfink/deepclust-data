@@ -10,7 +10,7 @@ using namespace std;
 unordered_map<string, string> acc2arch;
 unordered_map<string, string> fam2clan;
 unordered_map<string, int> clust, clust_clan, counts;
-multimap<string, string> arch2query;
+multimap<string, string> arch2query, clan_arch2query;
 double sens_a = 0, prec_a = 0;
 
 bool query_level = false;
@@ -86,7 +86,7 @@ void eval_cluster(const string& rep) {
 		if(query_level) {
 			auto its = arch2query.equal_range(arch.first);
 			for(auto it = its.first; it != its.second; ++it)
-				cout << it->second << '\t' << sens << endl;
+				cout << "SENS" << '\t' << it->second << '\t' << sens << endl;
 		} else
 			cout << "SENS" << '\t' << arch.first << '\t' << arch.second << '\t' << sens << '\t' << rep << endl;
 		sens_a += arch.second * sens;
@@ -96,6 +96,9 @@ void eval_cluster(const string& rep) {
 		const double arch_size = counts[arch.first];
 		const double prec = (double)arch.second / size;
 		if(query_level) {
+			auto its = clan_arch2query.equal_range(arch.first);
+			for (auto it = its.first; it != its.second; ++it)
+				cout << "PREC" << '\t' << it->second << '\t' << prec << endl;
 		} else
 			cout << "PREC" << '\t' << arch.first << '\t' << arch.second << '\t' << prec << '\t' << rep << endl;
 		prec_a += arch.second * prec;
@@ -146,16 +149,21 @@ int main(int argc, char** argv) {
 			clust.clear();
 			clust_clan.clear();
 			arch2query.clear();
+			clan_arch2query.clear();
 		}
 		const auto it = acc2arch.find(member);
 		if(it == acc2arch.end()) {
 			++ignored;
 		} else {
 			const string& arch = it->second;
+			const string ca = clan_arch(arch);
 			++clust[arch];
-			++clust_clan[clan_arch(arch)];
+			++clust_clan[ca];
 			++n;
-			if(query_level) arch2query.emplace(arch, member);
+			if (query_level) {
+				arch2query.emplace(arch, member);
+				clan_arch2query.emplace(ca, member);
+			}
 		}
 		++total;
 		if(total % 100000 == 0)
