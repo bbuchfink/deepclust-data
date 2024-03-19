@@ -108,7 +108,7 @@ void eval_cluster(const string& rep) {
 		clust_prec += arch.second * prec;
 	}
 	if (size > 0)
-		cout << "PRCCOMP" << '\t' << clust_prec / size << endl;
+		cout << "PRCCOMP" << '\t' << clust_prec / size << '\t' << size << endl;
 }
 
 int main(int argc, char** argv) {
