@@ -11,7 +11,7 @@ unordered_map<string, string> acc2arch;
 unordered_map<string, string> fam2clan;
 unordered_map<string, int> clust, clust_clan, counts;
 multimap<string, string> arch2query, clan_arch2query;
-double sens_a = 0, prec_a = 0;
+double sens_a = 0, prec_a = 0, prec_w = 0, sum_w = 0;
 
 bool query_level = false;
 
@@ -102,6 +102,8 @@ void eval_cluster(const string& rep) {
 		} else
 			cout << "PREC" << '\t' << arch.first << '\t' << arch.second << '\t' << prec << '\t' << rep << endl;
 		prec_a += arch.second * prec;
+		prec_w += arch.second * prec / size;
+		sum_w += 1.0 / size * arch.second;
 	}
 }
 
@@ -174,6 +176,7 @@ int main(int argc, char** argv) {
 	cerr << "Annotated = " << n << endl;
 	cerr << "Sens = " << sens_a / n << endl;
 	cerr << "Prec = " << prec_a / n << endl;
+	cerr << "Prec_w = " << prec_w / sum_w << endl;
 
 	return 0;
 }
