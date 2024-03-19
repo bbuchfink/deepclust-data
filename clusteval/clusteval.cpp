@@ -92,6 +92,7 @@ void eval_cluster(const string& rep) {
 		sens_a += arch.second * sens;
 		//prec_a += arch.second * prec;
 	}
+	double clust_prec = 0.0;
 	for(const auto& arch : clust_clan) {
 		const double arch_size = counts[arch.first];
 		const double prec = (double)arch.second / size;
@@ -104,7 +105,10 @@ void eval_cluster(const string& rep) {
 		prec_a += arch.second * prec;
 		prec_w += arch.second * prec / size;
 		sum_w += 1.0 / size * arch.second;
+		clust_prec += arch.second * prec;
 	}
+	if (size > 0)
+		cout << "PRCCOMP" << '\t' << clust_prec / size << endl;
 }
 
 int main(int argc, char** argv) {
