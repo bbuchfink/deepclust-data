@@ -4,6 +4,7 @@
 #include <string>
 #include <string.h>
 #include <map>
+#include <vector>
 
 using namespace std;
 
