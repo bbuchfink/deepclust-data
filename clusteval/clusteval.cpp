@@ -150,13 +150,19 @@ void eval_cluster(const string& rep) {
 		sum_w += 1.0 / size * arch.second;
 		clust_prec += arch.second * prec;
 		if (with_corr) {
+			double c2 = 0;
 			for (const auto& arch2 : clust_clan) {
 				const double f = (double)arch2.second / size;
-				if (arch.first == arch2.first)
+				if (arch.first == arch2.first) {
 					clust_corr += arch.second * f;
-				else
+					c2 += f;
+				}
+				else {
 					clust_corr += arch.second * corr(arch.first, arch2.first) * f;
+					c2 += corr(arch.first, arch2.first) * f;
+				}
 			}
+			cout << "CORS" << '\t' << arch.first << '\t' << arch.second << '\t' << c2 << '\t' << rep << endl;
 		}
 	}
 	if (size > 0) {
