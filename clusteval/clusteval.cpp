@@ -151,10 +151,11 @@ void eval_cluster(const string& rep) {
 		clust_prec += arch.second * prec;
 		if (with_corr) {
 			for (const auto& arch2 : clust_clan) {
+				const double f = (double)arch2.second / size;
 				if (arch.first == arch2.first)
-					clust_corr += arch.second;
+					clust_corr += arch.second * f;
 				else
-					clust_corr += arch.second * corr(arch.first, arch2.first);
+					clust_corr += arch.second * corr(arch.first, arch2.first) * f;
 			}
 		}
 	}
