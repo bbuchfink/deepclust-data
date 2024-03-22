@@ -11,9 +11,51 @@ unordered_map<string, string> acc2arch;
 unordered_map<string, string> fam2clan;
 unordered_map<string, int> clust, clust_clan, counts;
 multimap<string, string> arch2query, clan_arch2query;
-double sens_a = 0, prec_a = 0, prec_w = 0, sum_w = 0;
+double sens_a = 0, prec_a = 0, prec_w = 0, sum_w = 0, corr_w = 0, corr_sum = 0;
 
 bool query_level = false;
+bool with_corr = true;
+
+std::vector<std::string> tokenize(const char* str, const char* delimiters)
+{
+	std::vector<std::string> out;
+	std::string token;
+	while (*str != 0) {
+		while (*str != 0 && strchr(delimiters, *str))
+			++str;
+		token.clear();
+		while (*str != 0 && strchr(delimiters, *str) == nullptr)
+			token += *(str++);
+		if (token.length() > 0)
+			out.push_back(token);
+	}
+	if (out.size() == 0)
+		out.push_back(std::string());
+	return out;
+}
+
+template <class InputIterator1, class InputIterator2>
+int set_intersection(InputIterator1 first1, InputIterator1 last1,
+	InputIterator2 first2, InputIterator2 last2)
+{
+	int n = 0;
+	while (first1 != last1 && first2 != last2)
+	{
+		if (*first1 < *first2) ++first1;
+		else if (*first2 < *first1) ++first2;
+		else {
+			++n;
+			++first1; ++first2;
+		}
+	}
+	return n;
+}
+
+double corr(const string& a1, const string& a2) {
+	vector<string> b1 = tokenize(a1.c_str(), "_");
+	vector<string> b2 = tokenize(a2.c_str(), "_");
+	return 2.0 * set_intersection(b1.begin(), b1.end(), b2.begin(), b2.end()) / b1.size() / b2.size();
+}
 
 string path(const string& file) {
 	size_t pos = file.find_last_of("/\\");
@@ -92,7 +134,7 @@ void eval_cluster(const string& rep) {
 		sens_a += arch.second * sens;
 		//prec_a += arch.second * prec;
 	}
-	double clust_prec = 0.0;
+	double clust_prec = 0.0, clust_corr=0;
 	for(const auto& arch : clust_clan) {
 		const double arch_size = counts[arch.first];
 		const double prec = (double)arch.second / size;
@@ -106,9 +148,19 @@ void eval_cluster(const string& rep) {
 		prec_w += arch.second * prec / size;
 		sum_w += 1.0 / size * arch.second;
 		clust_prec += arch.second * prec;
+		if (with_corr) {
+			for (const auto& arch2 : clust_clan) {
+				if (arch.first == arch2.first)
+					clust_corr += arch.second;
+				else
+					clust_corr += arch.second * corr(arch.first, arch2.first);
+			}
+		}
 	}
-	if (size > 0)
+	if (size > 0) {
 		cout << "PRCCOMP" << '\t' << clust_prec / size << '\t' << size << endl;
+		cout << "PRCCORR" << '\t' << clust_corr / size << '\t' << size << endl;
+	}
 }
 
 int main(int argc, char** argv) {
