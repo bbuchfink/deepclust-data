@@ -9,7 +9,7 @@ Fig1b_data <-
     `FLSHclust` = as.double(readr::read_lines(paste("flshclust",type,"gz", sep='.'))),
     `MMseqs2` = as.double(readr::read_lines(paste("mmseqs",type,"gz",sep='.'))),
     `DIAMOND DeepClust (uni-directional coverage)` = as.double(readr::read_lines(paste("diamond-uni",type,"gz", sep='.'))),
-	`MMseqs2/Linclust` = as.double(readr::read_lines(paste("mmseqs-linclust",type,"gz",sep='.'))),
+	`MMseqs2/Linclust` = as.double(readr::read_lines(paste("linclust",type,"gz",sep='.'))),
 	`DIAMOND DeepClust (linear mode)` = as.double(readr::read_lines(paste("diamond-lin",type,"gz", sep='.')))
   )
 
@@ -35,8 +35,8 @@ names(Fig1b_data_tibble_tidy) <- c("Software", "Distribution")
 
 Fig1b_data_tibble_tidy <- dplyr::mutate(Fig1b_data_tibble_tidy, Software = factor(Software, levels = c(
   "DIAMOND DeepClust",
-  "DIAMOND DeepClust (linear mode)",
   "MMseqs2",
+  "DIAMOND DeepClust (linear mode)",
   "FLSHclust",
   "MMseqs2/Linclust",
   "DIAMOND DeepClust (uni-directional coverage)"
@@ -83,7 +83,7 @@ Fig1b_data_tibble_tidy <- dplyr::mutate(Fig1b_data_tibble_tidy, Software = facto
       color = "black",
       fill = "black"
     ) +
-    ggplot2::geom_violin(alpha = 0.3, size = 1.5) +
+    #ggplot2::geom_violin(alpha = 0.3, size = 1.5) +
     #ggplot2::geom_boxplot() +
     # ggplot2::geom_point(alpha = 0.7) +
     ggplot2::theme_bw()  +
@@ -105,8 +105,8 @@ Fig1b_data_tibble_tidy <- dplyr::mutate(Fig1b_data_tibble_tidy, Software = facto
     ) +
     
     ggplot2::scale_y_continuous(breaks = scales::pretty_breaks(n = 20)) +
-    ggplot2::scale_color_manual(values = ggsci::pal_npg("nrc")(6)[c(3, 5, 4, 1, 6, 2)]) +
-    ggplot2::scale_fill_manual(values = ggsci::pal_npg("nrc")(6)[c(3, 5, 4, 1, 6, 2)]) +
+    ggplot2::scale_color_manual(values = ggsci::pal_npg("nrc")(6)[c(3, 4, 5, 1, 6, 2)]) +
+    ggplot2::scale_fill_manual(values = ggsci::pal_npg("nrc")(6)[c(3, 4, 5, 1, 6, 2)]) +
 	ggplot2::guides(colour=ggplot2::guide_legend(ncol=2,nrow=3,byrow=TRUE))
     # ggplot2::scale_x_discrete(labels = table(dplyr::slice_sample(Fig1b_data_tibble_tidy, n = 1000)$Software))
   
