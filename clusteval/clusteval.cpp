@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <string.h>
 #include <map>
@@ -10,6 +11,7 @@ using namespace std;
 
 unordered_map<string, string> acc2arch;
 unordered_map<string, string> fam2clan;
+unordered_set<string> rep_accs;
 unordered_map<string, int> clust, clust_clan, counts;
 multimap<string, string> arch2query, clan_arch2query;
 double sens_a = 0, prec_a = 0, prec_w = 0, sum_w = 0, corr_w = 0, corr_sum = 0;
@@ -119,9 +121,11 @@ void aln_file(const char* name) {
 }
 
 void eval_cluster(const string& rep) {
-	int size=0;
+	int size = 0, size_clan = 0;
 	for(const auto& arch : clust)
 		size += arch.second;
+	for (const auto& arch : clust_clan)
+		size_clan += arch.second;
 	for(const auto& arch: clust) {
 		const double arch_size = counts[arch.first];
 		const double sens = (double)arch.second / arch_size;
@@ -135,10 +139,9 @@ void eval_cluster(const string& rep) {
 		sens_a += arch.second * sens;
 		//prec_a += arch.second * prec;
 	}
-	double clust_prec = 0.0, clust_corr=0;
+	double clust_prec = 0.0, clust_corr = 0;
 	for(const auto& arch : clust_clan) {
-		const double arch_size = counts[arch.first];
-		const double prec = (double)arch.second / size;
+		const double prec = (double)arch.second / size_clan;
 		if(query_level) {
 			auto its = clan_arch2query.equal_range(arch.first);
 			for (auto it = its.first; it != its.second; ++it)
@@ -146,8 +149,8 @@ void eval_cluster(const string& rep) {
 		} else
 			cout << "PREC" << '\t' << arch.first << '\t' << arch.second << '\t' << prec << '\t' << rep << endl;
 		prec_a += arch.second * prec;
-		prec_w += arch.second * prec / size;
-		sum_w += 1.0 / size * arch.second;
+		prec_w += arch.second * prec / size_clan;
+		sum_w += 1.0 / size_clan * arch.second;
 		clust_prec += arch.second * prec;
 		if (with_corr) {
 			double c2 = 0;
@@ -180,16 +183,20 @@ int main(int argc, char** argv) {
 	ifstream map_file(data_file);
 	string acc, arch;
 	acc2arch.reserve(149824975);
-	int n=0;
-	while(map_file >> acc >> arch) {
+	int n = 0, is_rep = 0;
+	while(map_file >> acc >> arch >> is_rep) {
 		acc2arch[acc] = arch;
-		++counts[arch];
+		if (is_rep == 1) {
+			rep_accs.insert(acc);
+			++counts[arch];
+		}
 		++n;
 		if(n % 1000000 == 0)
 			cerr << n << endl;
 	}
 	cerr << "Accessions = " << acc2arch.size() << endl;
 	cerr << "Archs = " << counts.size() << endl;
+	cerr << "Representatives = " << rep_accs.size() << endl;
 
 	ifstream clan_file(path(data_file) + "/clan2acc.tsv");
 	string clan, fam;
@@ -206,8 +213,8 @@ int main(int argc, char** argv) {
 
 	ifstream in_file(argv[3]);
 	string rep, member, curr;
-	n=0;
-	int ignored=0,total=0;
+	n = 0;
+	int ignored = 0, total = 0;
 	while(in_file >> rep >> member) {
 		if(rep != curr) {
 			eval_cluster(curr);
@@ -223,7 +230,8 @@ int main(int argc, char** argv) {
 		} else {
 			const string& arch = it->second;
 			const string ca = clan_arch(arch);
-			++clust[arch];
+			if(rep_accs.find(member) != rep_accs.end())
+				++clust[arch];
 			++clust_clan[ca];
 			++n;
 			if (query_level) {
