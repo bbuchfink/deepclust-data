@@ -246,7 +246,7 @@ int main(int argc, char** argv) {
 	eval_cluster(curr);
 	cerr << "Total = " << total << endl;
 	cerr << "Annotated = " << n << endl;
-	cerr << "Sens = " << sens_a / n << endl;
+	cerr << "Sens = " << sens_a / rep_accs.size() << endl;
 	cerr << "Prec = " << prec_a / n << endl;
 	cerr << "Prec_w = " << prec_w / sum_w << endl;
 
