@@ -10,3 +10,5 @@ Data files should be placed in the root of the repository.
 - `clan2acc.tsv`: File mapping Pfam accessions to clans.
 - `reps_10k.ge2.faa`: Sequences of 10k randomly samples representatives of the big ~19bn clustering run of clusters of size >= 2.
 - `reps_10k.ge3.faa`: Sequences of 10k randomly samples representatives of the big ~19bn clustering run of clusters of size >= 3.
+- `clust.dedup2.tsv.zst`: TSV file mapping cluster member sequences to representatives for the big ~19bn clustering run.
+- `centroids.dedup.faa`: FASTA file of representatives for the big ~19bn clustering run.
