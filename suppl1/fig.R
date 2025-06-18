@@ -30,7 +30,7 @@ Fig <- ggplot(data=df3, aes(x=`Compute nodes`, y=`Wall-clock time (hours)`, grou
   #  check_overlap = T
   #)
   
-cowplot::save_plot("Fig.pdf",
+cowplot::save_plot("suppl1.svg",
                    Fig,
                    base_height = 8,
                    base_width = 10)
