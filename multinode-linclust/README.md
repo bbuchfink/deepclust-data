@@ -5,7 +5,7 @@ a SLURM batch script to run the clustering on up to 32 nodes. The `--parallel-tm
 to point to a shared working directory across all nodes.
 
 The input database was the ~19bn experimental study dataset, available in Parquet format (see Data
-Availabiltiy). This workflow expects the input database to be a 2-column TSV file listing all files
+Availability). This workflow expects the input database to be a 2-column TSV file listing all files
 containing the sequences. The first column is the path to a FASTA file containing the sequences,
 the second column is the number of sequences in that file. To be efficient, the database should be
 split into sufficiently small files. For running the benchmark, we split the database into 8,724
