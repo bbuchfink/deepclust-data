@@ -18,4 +18,4 @@
 
 db=$(pwd)/db.tsv
 
-srun diamond linclust -d $db --log -M 500G --parallel-tmpdir $(pwd)/tmp/ --linclust-chunk-size 100G --approx-id 90
+srun diamond linclust -d $db --log -M 500G --parallel-tmpdir $(pwd)/tmp/ --linclust-chunk-size 100G --approx-id 90 -o out.tsv
