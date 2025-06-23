@@ -25,3 +25,7 @@ To plot Fig. 1b: Insert runtimes (in hours) into `Fig1b_data.tsv`, run `Fig1b.R`
 
 To plot Fig. 1c: Run `Fig1c.R` with parameter `prec` to plot precision or `sens`
 to plot sensitivity.
+
+The script `diamond-uni-30-90.sh` can be used for a benchmarking run with 90%
+uni-directional coverage and 30% sequence identity, mentioned in the methods section
+but not included in the main benchmark.

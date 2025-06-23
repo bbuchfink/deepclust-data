@@ -1,3 +1,3 @@
-/usr/bin/time mmseqs cluster $1 out . -s 7.5 --max-seqs 250 -c 0.85 -e 0.1 --cluster-mode 1 --max-iterations 3
+/usr/bin/time mmseqs linclust $1 out . -c 0.8 --cluster-mode 1 --max-iterations 3 --cov-mode 0 --min-seq-id 0 --kmer-per-seq 80
 mmseqs createtsv $1 $1 out out.tsv
-../util/get-eval.sh out.tsv mmseqs2-linclust
+../util/get-eval.sh out.tsv linclust

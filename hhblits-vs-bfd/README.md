@@ -1,4 +1,4 @@
-Script to search samples of 10k representative sequences from clusters of size >= 2 and >=3 against the BFD using HHblits.
+Script to search samples of 10k representative sequences from clusters of size >= 2 and >=3 against the BFD using HHblits (extended data fig. 4).
 
 Software needed:
 

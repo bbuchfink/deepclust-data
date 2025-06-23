@@ -1,4 +1,4 @@
-To get the cluster representation for the experimental study:
+To get the cluster representation for the experimental study (extended data fig. 2):
 
 Obtain `clust.dedup2.tsv.zst`.
 
