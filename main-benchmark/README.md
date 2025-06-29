@@ -5,7 +5,8 @@ Data files needed: `arch80_all.tsv`, `nr_accessions.tsv.zst`
 Software needed:
 
 - MMseqs2 release 14
-- DIAMOND v2.1.9
+- DIAMOND v2.1.9. We used the options `-DHIT_KEEP_TARGET_ID=ON -DEXTRA=ON` for compilation,
+  which enable some experimental optimizations not active by default.
 - FLSHclust: The code can be downloaded at https://zenodo.org/records/8371343.
   The `CODE.zip` archive is assumed to be extracted in `$HOME`. All dependencies
   are expected to be installed (see FLSHclust readme). In `CODE/FLSH/flsh.py`, we
