@@ -1,7 +1,9 @@
 # Scripts to re-create DeepClust AlphaFold2 Analysis with random centroids:
 
 Further information at:
+
 https://github.com/drostlab/deepclust_colabfold
+
 https://github.com/drostlab/deepclust_dataretrieval
 
 DCD-Database:
