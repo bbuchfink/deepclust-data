@@ -1,5 +1,9 @@
 # Scripts to re-create DeepClust AlphaFold2 Analysis with random centroids:
 
+Further information at:
+https://github.com/drostlab/deepclust_colabfold
+https://github.com/drostlab/deepclust_dataretrieval
+
 DCD-Database:
 - directory called joined_sort_clust_split
 - contains 3786 files
