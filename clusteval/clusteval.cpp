@@ -15,7 +15,7 @@ multimap<string, string> arch2query, clan_arch2query;
 double sens_a = 0, prec_a = 0, prec_w = 0, sum_w = 0, corr_w = 0, corr_sum = 0;
 
 bool query_level = false;
-bool with_corr = true;
+bool with_corr = false;
 
 std::vector<std::string> tokenize(const char* str, const char* delimiters)
 {
@@ -135,7 +135,7 @@ void eval_cluster(const string& rep) {
 		sens_a += arch.second * sens;
 		//prec_a += arch.second * prec;
 	}
-	double clust_prec = 0.0, clust_corr=0;
+	double clust_prec = 0.0, clust_corr = 0;
 	for(const auto& arch : clust_clan) {
 		const double arch_size = counts[arch.first];
 		const double prec = (double)arch.second / size;
@@ -165,10 +165,10 @@ void eval_cluster(const string& rep) {
 			cout << "CORS" << '\t' << arch.first << '\t' << arch.second << '\t' << c2 << '\t' << rep << endl;
 		}
 	}
-	if (size > 0) {
+	/*if (size > 0) {
 		cout << "PRCCOMP" << '\t' << clust_prec / size << '\t' << size << endl;
 		cout << "PRCCORR" << '\t' << clust_corr / size << '\t' << size << endl;
-	}
+	}*/
 }
 
 int main(int argc, char** argv) {
