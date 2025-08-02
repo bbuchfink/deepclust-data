@@ -122,8 +122,8 @@ void eval_cluster(const string& rep) {
 	int size=0;
 	for(const auto& arch : clust)
 		size += arch.second;
-	for(const auto& arch: clust) {
-		const double arch_size = counts[arch.first];
+	for(const auto& arch: clust_clan) {
+		const double arch_size = counts.at(arch.first);
 		const double sens = (double)arch.second / arch_size;
 		//prec = (double)arch.second / size;
 		if(query_level) {
@@ -137,7 +137,6 @@ void eval_cluster(const string& rep) {
 	}
 	double clust_prec = 0.0, clust_corr = 0;
 	for(const auto& arch : clust_clan) {
-		const double arch_size = counts[arch.first];
 		const double prec = (double)arch.second / size;
 		if(query_level) {
 			auto its = clan_arch2query.equal_range(arch.first);
@@ -177,27 +176,27 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	const string data_file = argv[2];
+
+	ifstream clan_file(path(data_file) + "/clan2acc.tsv");
+	string clan, fam;
+	while (clan_file >> clan >> fam) {
+		fam2clan[fam] = clan;
+	}
+	cerr << "Families mapped to clan = " << fam2clan.size() << endl;
+
 	ifstream map_file(data_file);
 	string acc, arch;
 	acc2arch.reserve(149824975);
 	int n=0;
 	while(map_file >> acc >> arch) {
 		acc2arch[acc] = arch;
-		++counts[arch];
+		++counts[clan_arch(arch)];
 		++n;
 		if(n % 1000000 == 0)
 			cerr << n << endl;
 	}
 	cerr << "Accessions = " << acc2arch.size() << endl;
 	cerr << "Archs = " << counts.size() << endl;
-
-	ifstream clan_file(path(data_file) + "/clan2acc.tsv");
-	string clan, fam;
-	while(clan_file >> clan >> fam) {
-		fam2clan[fam] = clan;
-	}
-	
-	cerr << "Families mapped to clan = " << fam2clan.size() << endl;
 
 	if (strcmp(argv[1], "aln") == 0) {
 		aln_file(argv[3]);
