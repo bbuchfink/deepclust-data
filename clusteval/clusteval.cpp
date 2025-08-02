@@ -10,9 +10,9 @@ using namespace std;
 
 unordered_map<string, string> acc2arch;
 unordered_map<string, string> fam2clan;
-unordered_map<string, int> clust, clust_clan, counts;
+unordered_map<string, int> clust, clust_clan, counts, counts_clan;
 multimap<string, string> arch2query, clan_arch2query;
-double sens_a = 0, prec_a = 0, prec_w = 0, sum_w = 0, corr_w = 0, corr_sum = 0;
+double sens_a = 0, prec_a = 0, prec_w = 0, sum_w = 0, corr_w = 0, corr_sum = 0, sens_clan = 0;
 
 bool query_level = false;
 bool with_corr = false;
@@ -122,7 +122,7 @@ void eval_cluster(const string& rep) {
 	int size=0;
 	for(const auto& arch : clust)
 		size += arch.second;
-	for(const auto& arch: clust_clan) {
+	for(const auto& arch: clust) {
 		const double arch_size = counts.at(arch.first);
 		const double sens = (double)arch.second / arch_size;
 		//prec = (double)arch.second / size;
@@ -137,13 +137,19 @@ void eval_cluster(const string& rep) {
 	}
 	double clust_prec = 0.0, clust_corr = 0;
 	for(const auto& arch : clust_clan) {
+		const double arch_size = counts_clan.at(arch.first);
+		const double sens = (double)arch.second / arch_size;
 		const double prec = (double)arch.second / size;
 		if(query_level) {
 			auto its = clan_arch2query.equal_range(arch.first);
 			for (auto it = its.first; it != its.second; ++it)
 				cout << "PREC" << '\t' << it->second << '\t' << prec << endl;
-		} else
+		}
+		else {
 			cout << "PREC" << '\t' << arch.first << '\t' << arch.second << '\t' << prec << '\t' << rep << endl;
+			cout << "SENS_CLAN" << '\t' << arch.first << '\t' << arch.second << '\t' << sens << '\t' << rep << endl;
+		}
+		sens_clan += arch.second * sens;
 		prec_a += arch.second * prec;
 		prec_w += arch.second * prec / size;
 		sum_w += 1.0 / size * arch.second;
@@ -190,7 +196,8 @@ int main(int argc, char** argv) {
 	int n=0;
 	while(map_file >> acc >> arch) {
 		acc2arch[acc] = arch;
-		++counts[clan_arch(arch)];
+		++counts[arch];
+		++counts_clan[clan_arch(arch)];
 		++n;
 		if(n % 1000000 == 0)
 			cerr << n << endl;
@@ -238,6 +245,7 @@ int main(int argc, char** argv) {
 	cerr << "Total = " << total << endl;
 	cerr << "Annotated = " << n << endl;
 	cerr << "Sens = " << sens_a / n << endl;
+	cerr << "Sens clan = " << sens_clan / n << endl;
 	cerr << "Prec = " << prec_a / n << endl;
 	cerr << "Prec_w = " << prec_w / sum_w << endl;
 
