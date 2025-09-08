@@ -51,11 +51,14 @@ Fig1a_days <-
   ggplot2::scale_y_continuous(breaks = scales::pretty_breaks(n = 20)) +
   ggplot2::scale_color_manual(values = ggsci::pal_npg("nrc")(6)[c(2, 3, 5, 6)]) +
   ggplot2::guides(colour=ggplot2::guide_legend(ncol=2,nrow=2,byrow=TRUE)) +
-  ggplot2::theme(legend.title=ggplot2::element_blank())
-
-
-
-cowplot::save_plot("Fig1b.pdf",
+  ggplot2::theme(legend.title=ggplot2::element_blank()) +
+  ggplot2::labs(tag = "b") +
+  ggplot2::theme(
+    plot.tag = ggplot2::element_text(size = 36, face = "bold", hjust = 0, vjust = 1),
+    plot.tag.position = c(0.01, 0.99)  # top-left, slightly inset
+  )
+  
+cowplot::save_plot("Fig1b.svg",
                    Fig1a_days,
                    base_height = 8,
                    base_width = 10)

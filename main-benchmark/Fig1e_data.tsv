@@ -1,0 +1,6 @@
+MMseqs2	48.7
+DIAMOND DeepClust	46.6
+FLSHclust	51.4
+DIAMOND DeepClust (uni-dir. coverage)	25.1
+DIAMOND DeepClust (linear mode)	49.8
+MMseqs2/Linclust	94.5

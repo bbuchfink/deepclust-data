@@ -65,11 +65,14 @@ Fig1a_days <-
     segment.ncp = 3,
     segment.angle = 20,
     size = 5
-  ) + ggplot2::guides(colour=ggplot2::guide_legend(ncol=2,nrow=2,byrow=TRUE))
+  ) + ggplot2::guides(colour=ggplot2::guide_legend(ncol=2,nrow=2,byrow=TRUE)) +
+  ggplot2::labs(tag = "a") +
+  ggplot2::theme(
+    plot.tag = ggplot2::element_text(size = 36, face = "bold", hjust = 0, vjust = 1),
+    plot.tag.position = c(0.01, 0.99)  # top-left, slightly inset
+  )
 
-
-
-cowplot::save_plot("Fig1a.pdf",
+cowplot::save_plot("Fig1a.svg",
                    Fig1a_days,
                    base_height = 8,
                    base_width = 10)
